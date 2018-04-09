@@ -7,10 +7,10 @@ public class Main {
 	
 	public static void main(String[] args) {
 		board = new Board(secretPegs, 5);
-		board.addGuess();
-//		board.addGuess(secretPegs);
-		System.out.println(board.currentGuess);
-//		System.out.println(board.returnPastGuesses());
+		board.addGuess(secretPegs);
+		board.addGuess(secretPegs);
+		System.out.println(board.currentGuess[1]);
+		System.out.println(board.returnPastGuesses()[1][1]);
 	}
 
 }

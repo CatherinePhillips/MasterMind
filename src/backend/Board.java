@@ -9,7 +9,8 @@ public class Board {
 	
 	public Board(int[] sequence, int totalGuesses) {
 		secretPegs = sequence;
-		pastGuesses = new int[3][totalGuesses];
+		currentGuess = new int[4];
+		pastGuesses = new int[4][totalGuesses];
 		numGuesses = totalGuesses;
 		
 	}
