@@ -22,11 +22,11 @@ public class Board {
 	public Board(int[] sequence, int totalGuesses) {
 		secretGuess = sequence;
 		currentGuess = new int[4];
-		pastGuesses = new int[4][totalGuesses];
+		pastGuesses = new int[totalGuesses][4];
 		numGuesses = totalGuesses;
 		
 		currentPegs = new int[4];
-		pastPegs = new int[4][totalGuesses];
+		pastPegs = new int[totalGuesses][4];
 		
 	}
 	
@@ -38,6 +38,7 @@ public class Board {
 		if(numGuesses > 0) {
 			currentGuess = guess;
 			numGuesses--;
+			pastGuesses[(pastGuesses.length - numGuesses)] = currentGuess;
 		} else {
 			System.out.println("No more guesses!");
 		}
@@ -87,19 +88,12 @@ public class Board {
 		for(int i = numBlack; i < numBlack + numWhite; i++) {
 			currentPegs[i] = 1;
 		}
+		
+		pastPegs[(pastPegs.length - numGuesses)] = currentPegs;
+		System.out.println("Adding blah to row " + (pastPegs.length - numGuesses));
 		return currentPegs;
 	}
 	
-	/**
-	 * archives the current guess and pegs into the pastGuess/pastPegs arrays 
-	 */
-	public void archiveCurrentGuess() {
-		
-			pastGuesses[(pastGuesses[0].length - numGuesses)] = currentGuess;
-			pastPegs[(pastPegs[0].length - numGuesses)] = currentPegs;
-		
-	}
-
 	/**
 	 * returns the past guesses 
 	 * @return an int array of the past guesses so far 
