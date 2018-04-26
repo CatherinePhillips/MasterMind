@@ -14,19 +14,21 @@ public class Board {
 	private int[] currentPegs;
 	private int[][] pastPegs;
 	
+	private int numRows;
+	private int numColors;
 	/**
 	 * creates a new board of mastermind
 	 * @param sequence the secret sequence to start with 
 	 * @param totalGuesses the total number of guesses before you lose the game 
 	 */
-	public Board(int[] sequence, int totalGuesses) {
+	public Board(int[] sequence, int totalGuesses, int rows, int colors) {
 		secretGuess = sequence;
-		currentGuess = new int[4];
-		pastGuesses = new int[totalGuesses][4];
+		numRows = rows;
+		numColors = colors;
+		currentGuess = new int[numRows];
 		numGuesses = totalGuesses;
 		
-		currentPegs = new int[4];
-		pastPegs = new int[totalGuesses][4];
+		currentPegs = new int[numRows];
 		
 	}
 	
@@ -38,7 +40,6 @@ public class Board {
 		if(numGuesses > 0) {
 			currentGuess = guess;
 			numGuesses--;
-			pastGuesses[(pastGuesses.length - numGuesses)] = currentGuess;
 		} else {
 			System.out.println("No more guesses!");
 		}
@@ -56,12 +57,12 @@ public class Board {
 		int numWhite = 0;
 
 		//go through each color and find matches
-		for(int i = 1; i < 7; i++) {
+		for(int i = 1; i < numColors; i++) {
 			int numInSecret = 0;
 			int numInGuess = 0;
 			int numBlackInGuess = 0;
 			//for each position check if there is one of the chosen color in guess or in secret
-			for(int j = 0; j < 4; j++) {
+			for(int j = 0; j < numRows; j++) {
 				if(secretGuess[j] == i) {
 					numInSecret++;
 				}
@@ -89,25 +90,20 @@ public class Board {
 			currentPegs[i] = 1;
 		}
 		
-		pastPegs[(pastPegs.length - numGuesses)] = currentPegs;
-		System.out.println("Adding blah to row " + (pastPegs.length - numGuesses));
+		if(isWinner()) {
+			System.out.println("You won!");
+		}
+		
 		return currentPegs;
 	}
 	
-	/**
-	 * returns the past guesses 
-	 * @return an int array of the past guesses so far 
-	 */
-	public int[][] returnPastGuesses() {
-		return pastGuesses;
+	public boolean isWinner() {
+		boolean allTwos = true;
+		for(int i = 0; i < numRows; i++) {
+			if(currentPegs[i] != 2) {
+				allTwos = false;
+			}
+		}
+		return (numGuesses > 0 && allTwos);
 	}
-	
-	/**
-	 * returns the past pegs
-	 * @return an int array of the past peg values so far 
-	 */
-	public int[][] returnPastPegs() {
-		return pastPegs;
-	}
-	
 }
