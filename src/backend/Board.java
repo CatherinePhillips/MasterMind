@@ -6,16 +6,16 @@ public class Board {
 	private int[] secretGuess;
 	private int numGuesses;
 	
-	//current guess and array of past guesses
+	//current guess and the pegs from that guess
 	private int[] currentGuess;
-	private int[][] pastGuesses;
-	
-	//accuracy pegs for current guess and past guesses
 	private int[] currentPegs;
-	private int[][] pastPegs;
 	
+	//number of rows and colors are adjustable 
 	private int numRows;
 	private int numColors;
+	
+	//whether you've won or not 
+	private boolean hasWon = false;
 	/**
 	 * creates a new board of mastermind
 	 * @param sequence the secret sequence to start with 
@@ -52,7 +52,7 @@ public class Board {
 	 * @return an array of 4 ints that represent the small black and white pegs for the current guess
 	 */
 	public int[] returnPegs() {
-		
+
 		int numBlack = 0;
 		int numWhite = 0;
 
@@ -90,13 +90,20 @@ public class Board {
 			currentPegs[i] = 1;
 		}
 		
-		if(isWinner()) {
+		//tells you if you win
+		if(isWinner() && !hasWon) {
 			System.out.println("You won!");
+			hasWon = true;
 		}
 		
 		return currentPegs;
 	}
 	
+	/**
+	 * tells you whether you're a winner or not 
+	 * (you win if you still have turns left and your pegs are all twos)
+	 * @return true if you win, false otherwise 
+	 */
 	public boolean isWinner() {
 		boolean allTwos = true;
 		for(int i = 0; i < numRows; i++) {
