@@ -74,12 +74,17 @@ public class Board {
 					numBlack++;
 				}
 			}
+			
 			//if there is the same number of this color in both the secret and the guess,
 			//that number will be the sum of the black and white pegs for that color
-			if(numInSecret == numInGuess) {
+			if(numInSecret <= numInGuess) {
 				numWhite += numInSecret - numBlackInGuess;
+			} else {
+				numWhite += numInGuess - numBlackInGuess;
 			}
 		}
+		
+		
 		//the first numBlack entries will be 2 
 		for(int i = 0; i < numBlack; i++) {
 			currentPegs[i] = 2;
