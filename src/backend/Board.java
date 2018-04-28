@@ -1,5 +1,7 @@
 package backend;
 
+import java.util.Arrays;
+
 public class Board {
 
 	//initial sequence to set up the game
@@ -84,7 +86,7 @@ public class Board {
 			}
 		}
 		
-		
+		Arrays.fill(currentPegs, 0);
 		//the first numBlack entries will be 2 
 		for(int i = 0; i < numBlack; i++) {
 			currentPegs[i] = 2;
