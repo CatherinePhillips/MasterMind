@@ -1,5 +1,6 @@
 package backend;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 public class Board {
@@ -16,6 +17,7 @@ public class Board {
 	private int numRows;
 	private int numColors;
 	
+	private ArrayList<int[]> possibleSolutions;
 	//whether you've won or not 
 	private boolean hasWon = false;
 	/**
@@ -29,9 +31,13 @@ public class Board {
 		numColors = colors;
 		currentGuess = new int[numRows];
 		numGuesses = totalGuesses;
-		
 		currentPegs = new int[numRows];
+		possibleSolutions = createCombos(rows, colors);
 		
+	}
+	
+	public int[] getSecretGuess() {
+		return secretGuess;
 	}
 	
 	/**
@@ -45,6 +51,7 @@ public class Board {
 		} else {
 			System.out.println("No more guesses!");
 		}
+		currentPegs = returnPegs();
 	}
 	
 	/**
@@ -54,9 +61,22 @@ public class Board {
 	 * @return an array of 4 ints that represent the small black and white pegs for the current guess
 	 */
 	public int[] returnPegs() {
+		return returnPegs(secretGuess, currentGuess);
+	}
+	
+	/**
+	 * returns the black and white pegs 
+	 * white peg - 1 - means there is one of the right color but in the wrong place
+	 * black peg - 2 - means there is one with the right placement and color
+	 * @param guessOne the guess that the second guess is compared to 
+	 * @param guessTwo the guess by the player that we want the pegs from 
+	 * @return an array of 4 ints that represent the small black and white pegs for the current guess
+	 */
+	public int[] returnPegs(int[] guessOne, int[] guessTwo) {
 
 		int numBlack = 0;
 		int numWhite = 0;
+		int[] tempPegs = new int[numRows];
 
 		//go through each color and find matches
 		for(int i = 1; i < numColors; i++) {
@@ -65,13 +85,13 @@ public class Board {
 			int numBlackInGuess = 0;
 			//for each position check if there is one of the chosen color in guess or in secret
 			for(int j = 0; j < numRows; j++) {
-				if(secretGuess[j] == i) {
+				if(guessOne[j] == i) {
 					numInSecret++;
 				}
-				if(currentGuess[j] == i) {
+				if(guessTwo[j] == i) {
 					numInGuess++;
 				}
-				if(secretGuess[j] == i && currentGuess[j] == i) {
+				if(guessOne[j] == i && guessTwo[j] == i) {
 					numBlackInGuess++;
 					numBlack++;
 				}
@@ -86,24 +106,18 @@ public class Board {
 			}
 		}
 		
-		Arrays.fill(currentPegs, 0);
+		Arrays.fill(tempPegs, 0);
 		//the first numBlack entries will be 2 
 		for(int i = 0; i < numBlack; i++) {
-			currentPegs[i] = 2;
+			tempPegs[i] = 2;
 		}
 		
 		//afer those first entries the next numWhite entries will be 1 
 		for(int i = numBlack; i < numBlack + numWhite; i++) {
-			currentPegs[i] = 1;
+			tempPegs[i] = 1;
 		}
 		
-		//tells you if you win
-		if(isWinner() && !hasWon) {
-			System.out.println("You won!");
-			hasWon = true;
-		}
-		
-		return currentPegs;
+		return tempPegs;
 	}
 	
 	/**
@@ -119,5 +133,62 @@ public class Board {
 			}
 		}
 		return (numGuesses > 0 && allTwos);
+	}
+	
+	public ArrayList<int[]> createCombos(int numRows, int numColors) {
+		ArrayList<int[]> tempList = new ArrayList<int[]>();
+		if (numRows == 0) {  // Just one combination, of size 0
+			tempList.add(new int[0]); // Weird, but I need an empty combo
+			return tempList;
+		}
+		else {  // length is greater than 1; use recursion
+			ArrayList<int[]> smallCombos = createCombos(numRows - 1,numColors);
+			for (int small = 0; small < smallCombos.size(); small++) {
+				for (int color = 0; color < numColors; color++) {
+					// Build new, larger combo
+					int[] tempCombo = new int[numRows];
+					
+					// copy small combo to new combo, and add color
+					for (int k = 0; k < numRows - 1; k++) {
+						tempCombo[k] = smallCombos.get(small)[k];
+					}
+					tempCombo[numRows - 1] = color;
+					
+					// Add to list of combos
+					tempList.add(tempCombo);
+				}
+
+			}
+			return tempList;	
+		}
+	}
+
+	public void printCombo(int [] c)
+	{
+		for (int i = 0; i < c.length; i++)
+			System.out.print(c[i]+" ");
+		System.out.println();
+	}
+	
+	public void calculateRemainingSolutions() {
+		int[] targetPegs = returnPegs(secretGuess, currentGuess);
+		for(int i = possibleSolutions.size() - 1; i >= 0; i--) {
+			int[] solutionPegs = returnPegs(possibleSolutions.get(i), currentGuess);
+//			printCombo(targetPegs);
+//			printCombo(solutionPegs);
+//			System.out.println();
+			if(!Arrays.equals(targetPegs, solutionPegs)) {
+				possibleSolutions.remove(i);
+			}
+		}
+	}
+	
+	public ArrayList<int[]> returnPossibleSolutions() {
+		return possibleSolutions;
+	}
+	
+	public int returnNumPossibleSolutions() {
+		calculateRemainingSolutions();
+		return possibleSolutions.size();
 	}
 }
