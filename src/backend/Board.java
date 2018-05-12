@@ -135,6 +135,13 @@ public class Board {
 		return (numGuesses > 0 && allTwos);
 	}
 	
+	/**
+	 * creates an arraylist of all possible combination of pegs for a given number of rows and columns
+	 * recursive because why not 
+	 * @param numRows number of pegs in a row 
+	 * @param numColors number of possible colors
+	 * @return the arraylist of all possible combos
+	 */
 	public ArrayList<int[]> createCombos(int numRows, int numColors) {
 		ArrayList<int[]> tempList = new ArrayList<int[]>();
 		if (numRows == 0) {  // Just one combination, of size 0
@@ -163,32 +170,45 @@ public class Board {
 		}
 	}
 
-	public void printCombo(int [] c)
-	{
-		for (int i = 0; i < c.length; i++)
-			System.out.print(c[i]+" ");
-		System.out.println();
-	}
-	
+	/**
+	 * eliminates all solutions from possibleSolutions that don't match with the current guess and pegs
+	 */
 	public void calculateRemainingSolutions() {
 		int[] targetPegs = returnPegs(secretGuess, currentGuess);
 		for(int i = possibleSolutions.size() - 1; i >= 0; i--) {
 			int[] solutionPegs = returnPegs(possibleSolutions.get(i), currentGuess);
-//			printCombo(targetPegs);
-//			printCombo(solutionPegs);
-//			System.out.println();
 			if(!Arrays.equals(targetPegs, solutionPegs)) {
 				possibleSolutions.remove(i);
 			}
 		}
 	}
 	
+	/**
+	 * returns the arraylist of possible solutions that have not been eliminated
+	 * @return the arraylist of possible solutions 
+	 */
 	public ArrayList<int[]> returnPossibleSolutions() {
 		return possibleSolutions;
 	}
 	
+	/**
+	 * returns the number of possible solutions that have not been eliminated by calculateRemainingSolutions
+	 * @return the number of possible solutions
+	 */
 	public int returnNumPossibleSolutions() {
 		calculateRemainingSolutions();
 		return possibleSolutions.size();
 	}
+	
+	/**
+	 * method to print out an int[] nicely
+	 * @param array the array to print 
+	 */
+	public void printArray(int [] array) {
+		for (int i = 0; i < array.length; i++) {
+			System.out.print(array[i] + " ");
+		}
+		System.out.println();
+	}
+	
 }
