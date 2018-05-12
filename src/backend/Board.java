@@ -79,7 +79,7 @@ public class Board {
 		int[] tempPegs = new int[numRows];
 
 		//go through each color and find matches
-		for(int i = 1; i < numColors; i++) {
+		for(int i = 0; i < numColors; i++) {
 			int numInSecret = 0;
 			int numInGuess = 0;
 			int numBlackInGuess = 0;
