@@ -13,11 +13,11 @@ public class Main {
 	public static void main(String[] args) {
 		boardOne = new Board(secretGuessOne, 5, 4, 5);
 
-		System.out.println(boardOne.returnNumPossibleSolutions());
+		System.out.println(boardOne.getNumPossibleSolutions());
 		boardOne.addGuess(boardOneGuessOne);
-		System.out.println(boardOne.returnNumPossibleSolutions());
+		System.out.println(boardOne.getNumPossibleSolutions());
 		boardOne.addGuess(boardOneGuessTwo);
-		System.out.println(boardOne.returnNumPossibleSolutions());
+		System.out.println(boardOne.getNumPossibleSolutions());
 /*		testPegs(boardOne, boardOneGuessOne);
 		testPegs(boardOne, boardOneGuessTwo);
 		testPegs(boardOne, boardOneGuessThree);
@@ -27,12 +27,9 @@ public class Main {
 
 	public static void testPegs(Board board, int[] guess) {
 		board.addGuess(guess);
-		for(int i = 0; i < 4; i++) {
-			System.out.print(board.getSecretGuess()[i]);
-		}
-		for(int i = 0; i < 4; i++) {
-			System.out.print(board.returnPegs()[i]);
-		}
+		board.printArray(board.getSecretGuess());
+		board.printArray(board.getPegs());
+		board.printArray(board.getPossibleSolutions());
 		System.out.println();
 		
 	}

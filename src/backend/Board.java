@@ -51,7 +51,7 @@ public class Board {
 		} else {
 			System.out.println("No more guesses!");
 		}
-		currentPegs = returnPegs();
+		currentPegs = getPegs(secretGuess, currentGuess);
 	}
 	
 	/**
@@ -60,8 +60,8 @@ public class Board {
 	 * black peg - 2 - means there is one with the right placement and color
 	 * @return an array of 4 ints that represent the small black and white pegs for the current guess
 	 */
-	public int[] returnPegs() {
-		return returnPegs(secretGuess, currentGuess);
+	public int[] getPegs() {
+		return getPegs(secretGuess, currentGuess);
 	}
 	
 	/**
@@ -72,7 +72,7 @@ public class Board {
 	 * @param guessTwo the guess by the player that we want the pegs from 
 	 * @return an array of 4 ints that represent the small black and white pegs for the current guess
 	 */
-	public int[] returnPegs(int[] guessOne, int[] guessTwo) {
+	public int[] getPegs(int[] guessOne, int[] guessTwo) {
 
 		int numBlack = 0;
 		int numWhite = 0;
@@ -174,9 +174,9 @@ public class Board {
 	 * eliminates all solutions from possibleSolutions that don't match with the current guess and pegs
 	 */
 	public void calculateRemainingSolutions() {
-		int[] targetPegs = returnPegs(secretGuess, currentGuess);
+		int[] targetPegs = getPegs(secretGuess, currentGuess);
 		for(int i = possibleSolutions.size() - 1; i >= 0; i--) {
-			int[] solutionPegs = returnPegs(possibleSolutions.get(i), currentGuess);
+			int[] solutionPegs = getPegs(possibleSolutions.get(i), currentGuess);
 			if(!Arrays.equals(targetPegs, solutionPegs)) {
 				possibleSolutions.remove(i);
 			}
@@ -187,7 +187,7 @@ public class Board {
 	 * returns the arraylist of possible solutions that have not been eliminated
 	 * @return the arraylist of possible solutions 
 	 */
-	public ArrayList<int[]> returnPossibleSolutions() {
+	public ArrayList<int[]> getPossibleSolutions() {
 		return possibleSolutions;
 	}
 	
@@ -195,7 +195,7 @@ public class Board {
 	 * returns the number of possible solutions that have not been eliminated by calculateRemainingSolutions
 	 * @return the number of possible solutions
 	 */
-	public int returnNumPossibleSolutions() {
+	public int getNumPossibleSolutions() {
 		calculateRemainingSolutions();
 		return possibleSolutions.size();
 	}
