@@ -25,8 +25,8 @@ public class Board {
 	 * @param sequence the secret sequence to start with 
 	 * @param totalGuesses the total number of guesses before you lose the game 
 	 */
-	public Board(int[] sequence, int totalGuesses, int rows, int colors) {
-		secretGuess = sequence;
+	public Board(int[] secret, int totalGuesses, int rows, int colors) {
+		secretGuess = secret;
 		numRows = rows;
 		numColors = colors;
 		currentGuess = new int[numRows];
@@ -96,14 +96,9 @@ public class Board {
 					numBlack++;
 				}
 			}
-			
 			//if there is the same number of this color in both the secret and the guess,
 			//that number will be the sum of the black and white pegs for that color
-			if(numInSecret <= numInGuess) {
-				numWhite += numInSecret - numBlackInGuess;
-			} else {
-				numWhite += numInGuess - numBlackInGuess;
-			}
+			numWhite += Math.min(numInSecret, numInGuess) - numBlackInGuess;
 		}
 		
 		Arrays.fill(tempPegs, 0);
@@ -121,28 +116,13 @@ public class Board {
 	}
 	
 	/**
-	 * tells you whether you're a winner or not 
-	 * (you win if you still have turns left and your pegs are all twos)
-	 * @return true if you win, false otherwise 
-	 */
-	public boolean isWinner() {
-		boolean allTwos = true;
-		for(int i = 0; i < numRows; i++) {
-			if(currentPegs[i] != 2) {
-				allTwos = false;
-			}
-		}
-		return (numGuesses > 0 && allTwos);
-	}
-	
-	/**
 	 * creates an arraylist of all possible combination of pegs for a given number of rows and columns
 	 * recursive because why not 
 	 * @param numRows number of pegs in a row 
 	 * @param numColors number of possible colors
 	 * @return the arraylist of all possible combos
 	 */
-	public ArrayList<int[]> createCombos(int numRows, int numColors) {
+	private ArrayList<int[]> createCombos(int numRows, int numColors) {
 		ArrayList<int[]> tempList = new ArrayList<int[]>();
 		if (numRows == 0) {  // Just one combination, of size 0
 			tempList.add(new int[0]); // Weird, but I need an empty combo
@@ -173,7 +153,7 @@ public class Board {
 	/**
 	 * eliminates all solutions from possibleSolutions that don't match with the current guess and pegs
 	 */
-	public void calculateRemainingSolutions() {
+	private void calculateRemainingSolutions() {
 		int[] targetPegs = getPegs(secretGuess, currentGuess);
 		for(int i = possibleSolutions.size() - 1; i >= 0; i--) {
 			int[] solutionPegs = getPegs(possibleSolutions.get(i), currentGuess);
